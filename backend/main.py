@@ -8,12 +8,16 @@ from models.schemas import (
     ExportResponse,
     ErrorResponse
 )
+from agents.orchestrator import MainOrchestratorAgent
 
 app = FastAPI(
     title="DevPilot AI Backend",
     description="RESTful APIs for DevPilot AI Project Manager Agent",
     version="1.0.0"
 )
+
+# Initialize the main agent
+orchestrator = MainOrchestratorAgent()
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
@@ -27,19 +31,28 @@ async def generate_project(request: GenerateRequest):
     """
     Generate a complete software project plan from the user's description.
     """
-    # Mock response. AI logic to be implemented later.
+    # Trigger the agentic workflow with the user request
+    workflow_result = await orchestrator.execute_workflow({
+        "project_name": request.project_name,
+        "description": request.description,
+        "tech_stack": request.tech_stack
+    })
+    
+    # Return response based on the workflow execution.
     return GenerateResponse(
-        project_id="12345",
-        status="success",
-        summary="Online Flower Shop",
-        roadmap=[
-            "Requirement Analysis",
-            "Database Design",
-            "Frontend Development",
-            "Backend Development",
-            "Testing",
-            "Deployment"
-        ]
+        project_id=workflow_result.get("project_id", "12345"),
+        status=workflow_result.get("status", "success"),
+        summary=workflow_result.get("summary", "Project Summary"),
+        modules=workflow_result.get("modules", []),
+        complexity=workflow_result.get("complexity", "Medium"),
+        roadmap=workflow_result.get("roadmap", []),
+        tasks=workflow_result.get("tasks", []),
+        tech_stack_recommendation=workflow_result.get("tech_stack_recommendation", {}),
+        generated_files=workflow_result.get("generated_files", []),
+        workspace_path=workflow_result.get("workspace_path", ""),
+        export_zip_path=workflow_result.get("export_zip_path", ""),
+        review_result=workflow_result.get("review_result", {}),
+        readme_content=workflow_result.get("readme_content", "")
     )
 
 @app.get("/projects/{project_id}", response_model=ProjectResponse, responses={404: {"model": ErrorResponse}})
