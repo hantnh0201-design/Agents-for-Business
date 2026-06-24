@@ -40,6 +40,9 @@ The `MainOrchestratorAgent` sequentially coordinates the following specialized a
 5. **ReviewerAgent**: Analyzes the generated code and provides a comprehensive security and architectural review.
 6. **DocumentationAgent**: Uses **MCP Tools** to generate a beautifully formatted `README.md` for the spawned project.
 
+### Experimental Google ADK Track
+In addition to the raw Gemini API workflow, DevPilot AI now includes an experimental layer built on the **Google ADK (Agent Development Kit)**. Located in `backend/adk_agents/`, this layer demonstrates how to use official Google ADK primitives (`Agent`, `Model`) paired with our custom `tools_adapter.py` to seamlessly orchestrate the same robust pipeline using standardized ADK syntax.
+
 ### MCP Tools (Model Context Protocol)
 DevPilot AI utilizes MCP to bridge the gap between AI generation and physical file system execution. It uses secure, path-validated tools:
 - `create_project_workspace(project_id)`
