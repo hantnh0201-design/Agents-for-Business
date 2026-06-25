@@ -35,6 +35,14 @@ class ProjectFilesResponse(BaseModel):
 class ExportResponse(BaseModel):
     download_url: str
 
+class ChatRequest(BaseModel):
+    project_id: str
+    user_message: str
+
+class ChatResponse(BaseModel):
+    reply: str
+    updated_project: Dict[str, Any]
+
 class ErrorResponse(BaseModel):
     status: str
     message: str

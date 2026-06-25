@@ -94,3 +94,6 @@ class GeminiClient:
             print(f"Gemini API Error: {e}. Using fallback data.")
             logger.error(f"Error generating JSON with Gemini: {e}")
             return fallback_data
+
+# Create a singleton instance to be used across the application
+gemini_client = GeminiClient()
